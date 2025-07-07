@@ -3,7 +3,7 @@ Begin VB.Form frmForca
    AutoRedraw      =   -1  'True
    BackColor       =   &H8000000D&
    BorderStyle     =   1  'Fixed Single
-   Caption         =   "Forca"
+   Caption         =   "Forca_2506"
    ClientHeight    =   12225
    ClientLeft      =   45
    ClientTop       =   390
@@ -22,7 +22,7 @@ Begin VB.Form frmForca
       Left            =   360
       TabIndex        =   4
       Top             =   120
-      Width           =   9375
+      Width           =   9615
       Begin VB.TextBox txtLetra 
          Alignment       =   2  'Center
          BackColor       =   &H00000000&
@@ -77,6 +77,15 @@ Begin VB.Form frmForca
          TabIndex        =   5
          Top             =   1320
          Width           =   615
+      End
+      Begin VB.Image imgAcerto 
+         Height          =   480
+         Left            =   8880
+         Picture         =   "frmForca.frx":0446
+         Stretch         =   -1  'True
+         Top             =   1080
+         Visible         =   0   'False
+         Width           =   480
       End
       Begin VB.Label lblCategoria 
          Alignment       =   2  'Center
@@ -409,8 +418,8 @@ Begin VB.Form frmForca
    Begin VB.Timer tmrTempo 
       Enabled         =   0   'False
       Interval        =   500
-      Left            =   10080
-      Top             =   600
+      Left            =   11400
+      Top             =   720
    End
    Begin VB.ListBox lstPalavras 
       Height          =   4935
@@ -488,7 +497,6 @@ Dim Jogador1, Jogador2 As Integer
 
 Private Sub cmdDicionario_Click()
   Dim aux As String
-  
   aux = UCase(InputBox("Digte uma palavra (máximo 10 letras):", "Dicionário"))
   If Len(aux) <= 10 Then
     palavra = aux
@@ -515,8 +523,8 @@ End Sub
 
 Private Sub Form_Load()
     'palavra = "SAPATO"
-    'C:\CURSOS_Programador - 2025\Visual Basic 5 - Curso\Forca
-    caminhoBD = "C:\CURSOS_Programador - 2025\Visual Basic 5 - Curso\Forca\dicionario.txt"
+    caminhoBD = "C:\CURSOS_Programador - 2025\Visual Basic 5 - Curso\forca2025\dicionario.txt"
+    'caminhoBD = CurDir & "\dicionario.txt"
    
     erros = 0
     txtLetra.Text = ""
@@ -570,7 +578,7 @@ Private Sub verificarLetra()
     Dim i As Integer
     Dim aux As String
     achou = False
-    
+    imgAcerto.Visible = False
     If Trim(palavra) = "" Then
         MsgBox "erro palavra nula"
         Exit Sub
@@ -582,6 +590,7 @@ Private Sub verificarLetra()
         If aux = txtLetra.Text Then
             lblLetraSel(i - 1).Caption = txtLetra.Text
             'Beep
+            imgAcerto.Visible = True
             achou = True
         End If
     Next i
@@ -633,8 +642,11 @@ Private Sub inicializarJogo()
 End Sub
 
 Private Sub cmdReiniciar_Click()
+    fraForca.Enabled = False
     SorteiaPalavra
     inicializarJogo
+    picForca.Cls
+    tmrTempo.Enabled = True
 End Sub
 
 Private Sub desenharForca(etapa As Integer)
@@ -679,9 +691,10 @@ Public Sub SorteiaPalavra()
         If aux = "Õ" Or aux = "Ô" Or aux = "Ó" Then aux = "O"
         If aux = "Ú" Then aux = "U"
         palavra = palavra & aux
-        If Len(palavra) > 10 Then palavra = Left(palavra, 10)
     Next i
-    'MsgBox i & " - " & palavra
+    If Len(palavra) > 10 Then palavra = Left(palavra, 10)
+
+    'MsgBox Len(palavra) & " - " & palavra
 End Sub
 
 Public Sub ListarPalavras()
